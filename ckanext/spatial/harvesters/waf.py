@@ -7,6 +7,7 @@ import hashlib
 import dateutil.parser
 import pyparsing as parse
 import requests
+from urllib3.contrib import pyopenssl
 from sqlalchemy.orm import aliased
 from sqlalchemy.exc import DataError
 
@@ -61,6 +62,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         self._set_source_config(harvest_job.source.config)
 
         # Get contents
+        pyopenssl.inject_into_urllib3()
         try:
             response = requests.get(source_url, timeout=60)
             response.raise_for_status()
