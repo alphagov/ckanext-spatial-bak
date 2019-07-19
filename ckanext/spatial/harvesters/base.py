@@ -3,6 +3,7 @@ from urllib.request import urlopen
 
 import re
 import cgitb
+import lxml.html
 import warnings
 import requests
 import sys
@@ -731,7 +732,6 @@ class SpatialHarvester(HarvesterBase):
     def _is_wms(self, url):
         '''
         Checks if the provided URL actually points to a Web Map Service.
-        Uses owslib WMS reader to parse the response.
         '''
         try:
             s = wms.WebMapService(url)
