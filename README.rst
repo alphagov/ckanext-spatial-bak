@@ -36,6 +36,13 @@ for more details.
 For previous CKAN versions please use the v1.x tags.
 
 
+Tag schema
+----------
+
+To use the default CKAN tag schema add this to the CKAN ini file 
+
+    ckan.spatial.validator.use_default_tag_schema = true
+
 Community
 ---------
 
