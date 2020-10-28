@@ -42,6 +42,7 @@ ALLOWED_SEARCH_BACKENDS = [
 ]
 
 
+
 class SpatialMetadata(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
