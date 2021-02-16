@@ -1,4 +1,5 @@
 from lxml import etree
+import sys
 
 import logging
 log = logging.getLogger(__name__)
@@ -84,6 +85,7 @@ class MappedXmlElement(MappedXmlObject):
         return values
 
     def get_value(self, element):
+        unicode_or_str = str if sys.version_info > (3, 0) else unicode
         if self.elements:
             value = {}
             for child in self.elements:
@@ -92,7 +94,7 @@ class MappedXmlElement(MappedXmlObject):
         elif type(element) == etree._ElementStringResult:
             value = str(element)
         elif type(element) == etree._ElementUnicodeResult:
-            value = str(element)
+            value = unicode_or_str(element)
         else:
             value = self.element_tostring(element)
         return value
