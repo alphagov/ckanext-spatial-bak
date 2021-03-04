@@ -63,7 +63,6 @@ https://docs.ckan.org/projects/ckanext-spatial/en/latest/
 
 		[ckan.click_command]
 		spatial = ckanext.spatial.commands.spatial:spatial
-		spatial_csw = ckanext.spatial.commands.csw:spatial_csw
 
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
