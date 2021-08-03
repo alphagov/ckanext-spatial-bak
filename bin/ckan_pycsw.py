@@ -93,8 +93,12 @@ def _get_gathered_records(ckan_url):
             if not isinstance(listing, dict):
                 raise (RuntimeError, 'Wrong API response: %s' % listing)
 
-            r = listing.get('result')
-            results = r.get('results')
+            if 'result' in listing:
+                r = listing.get('result')
+                results = r.get('results')
+            else:
+                results = listing.get('results')
+
             if not results:
                 break
             for result in results:
@@ -148,7 +152,7 @@ def _delete_records(deleted, repo, error_count):
     return delete_count, error_count
 
 
-def _create_records(new, gathered_records, repo, ckan_url, context, error_count):
+def _create_records(new, gathered_records, ckan_url, repo, context, error_count):
     new_count = 0
     for ckan_id in new:
         ckan_info = gathered_records[ckan_id]
@@ -175,6 +179,7 @@ def _update_records(changed, gathered_records, repo, context, error_count):
         except Exception as e:
             log.error("Error: %r", e)
             error_count += 1
+            continue
 
         if not record:
             continue
