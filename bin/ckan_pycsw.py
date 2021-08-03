@@ -1,4 +1,5 @@
 import sys
+import json
 import logging
 import datetime
 import io
@@ -64,6 +65,18 @@ def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
         pycsw_config.write(configfile)
 
 
+def _get_harvest_object_id(result):
+    if 'harvest_object_id' in result:
+        return result['harvest_object_id']
+
+    for h in result['harvest']:
+        h_json = json.loads(h.replace("'", '"'))
+        if h_json['key'] == 'harvest_object_id':
+            return h_json['value']
+
+    raise Exception(f"Error locating harvest_object_id {result.id}")
+
+
 def _get_gathered_records(ckan_url):
     gathered_records = {}
     limit = 1000
@@ -75,8 +88,7 @@ def _get_gathered_records(ckan_url):
         )
     )
 
-    query = 'api/search/dataset?fl=id,metadata_modified,harvest,extras_harvest_object_id,' \
-            'extras_metadata_source&q=harvest_object_id:[\\\\"\\\\"%20TO%20*]&start={start}&rows={limit}'
+    query = 'api/search/dataset?fl=id,metadata_modified,harvest_object_id,harvest&start={start}&rows={limit}'
 
     while True:
         try:
@@ -96,9 +108,21 @@ def _get_gathered_records(ckan_url):
             if not results:
                 break
             for result in results:
+                if not set(['harvest', 'harvest_object_id']).intersection(set(result.keys())):
+                    print(f'Skipping {result["id"]}')
+                    continue
+                try:
+                    harvest_object_id = _get_harvest_object_id(result)
+                except Exception as e:
+                    log.error("Error gathering: %r", e)
+                    error_count += 1
+                    continue
+                
+                print(f'Gathering {result["id"]}')
+
                 gathered_records[result['id']] = {
                     'metadata_modified': result['metadata_modified'],
-                    'harvest_object_id': result['harvest_object_id'],
+                    'harvest_object_id': harvest_object_id,
                     'source': result.get('metadata_source')
                 }
             start = start + limit
@@ -161,7 +185,7 @@ def _create_records(new, gathered_records, ckan_url, repo, context, error_count)
     return new_count, error_count
 
 
-def _update_records(changed, gathered_records, repo, context, error_count):
+def _update_records(changed, gathered_records, ckan_url, repo, context, error_count):
     change_count = 0
     for ckan_id in changed:
         try:
@@ -223,7 +247,7 @@ def load(pycsw_config, ckan_url):
         new, gathered_records, ckan_url, repo, context, error_count)
 
     change_count, error_count = _update_records(
-        changed, gathered_records, repo, context, error_count)
+        changed, gathered_records, ckan_url, repo, context, error_count)
 
     log.info("Loading completed: {gather_count} gathered, {new_count} added, "
              "{change_count} changed, {delete_count} deleted, {error_count} errored".format(
@@ -261,13 +285,13 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
     try:
         xml = etree.parse(io.BytesIO(response.content))
     except Exception as err:
-        log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
+        log.error('Could not pass xml doc from %s, url: %s, Error: %s' % (ckan_id, url, err))
         raise
 
     try:
         record = metadata.parse_record(context, url, repo)[0]
     except Exception as err:
-        log.error('Could not extract metadata from %s, Error: %s' % (ckan_id, err))
+        log.error('Could not extract metadata from %s, url: %s, Error: %s' % (ckan_id, url, err))
         raise
 
     if not record.identifier:
