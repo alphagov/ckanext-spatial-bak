@@ -91,6 +91,7 @@ class GeminiHarvester(SpatialHarvester):
         Some errors raise Exceptions.
         '''
         log = logging.getLogger(__name__ + '.import')
+        gemini_string = str.encode(gemini_string)  # encode string as bytes instead
         xml = etree.fromstring(gemini_string)
         valid, profile, errors = self._get_validator().is_valid(xml)
         if not valid:
@@ -264,6 +265,12 @@ class GeminiHarvester(SpatialHarvester):
             'tags': tags,
             'resources':[]
         }
+
+        # We need to get the owner organization (if any) from the harvest
+        # source dataset
+        source_dataset = Package.get(self.obj.source.id)
+        if source_dataset.owner_org:
+            package_dict['owner_org'] = source_dataset.owner_org
 
         if self.obj.source.publisher_id:
             package_dict['groups'] = [{'id':self.obj.source.publisher_id}]
@@ -460,7 +467,7 @@ class GeminiHarvester(SpatialHarvester):
         # TODO: user
         context = {'model':model,
                    'session':Session,
-                   'user':'harvest',
+                   'user':self._get_user_name(),
                    'schema':package_schema,
                    'extras_as_string':True,
                    'api_version': '2'}
