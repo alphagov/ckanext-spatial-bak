@@ -4,7 +4,7 @@ import sys
 import logging
 
 from ckan.lib.helpers import json
-from ckanext.spatial.lib import save_package_extent
+from ckanext.spatial.postgis.model import save_package_extent
 log = logging.getLogger(__name__)
 
 
