@@ -2,6 +2,8 @@
 ckanext-spatial - Geo related plugins for CKAN
 ==============================================
 
+**Please use the https://github.com/alphagov/ckanext-spatial/tree/main-2.9 branch for DGU development.**
+
 .. image:: https://github.com/ckan/ckanext-spatial/workflows/Tests/badge.svg?branch=master
     :target: https://github.com/ckan/ckanext-spatial/actions
 
