@@ -351,6 +351,10 @@ def _load_config(file_path):
     config = SafeConfigParser()
     config.read(abs_path)
 
+    # update env vars in cfg
+    config._sections['server']['url'] = config._sections['server']['url'].replace('${CKAN_SITE_URL}', os.environ.get('CKAN_SITE_URL'))
+    config._sections['repository']['database'] = config._sections['repository']['database'].replace('${CKAN_SQLALCHEMY_URL}', os.environ.get('CKAN_SQLALCHEMY_URL'))
+
     return config
 
 
