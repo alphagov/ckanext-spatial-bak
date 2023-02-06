@@ -155,9 +155,6 @@ def _get_existing_records(repo):
 
     return existing_records
 
-    for key in set(gathered_records) & set(existing_records):
-        if gathered_records[key]["metadata_modified"] > existing_records[key]:
-            changed.add(key)
 
 def _delete_records(deleted, repo, error_count):
     delete_count = 0
