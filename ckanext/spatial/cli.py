@@ -105,6 +105,12 @@ probably need to provide the actual location with the -p option.
     config = ckan_pycsw._load_config(pycsw_config)
     ckan_pycsw.setup_db(config)
 
+    from flask import current_app
+
+    if not hasattr(current_app, '_metrics'):
+        metrics = PrometheusMetrics(current_app, excluded_paths=['/metrics', '/healthcheck'])
+        current_app._metrics = metrics
+
 
 @spatial_csw.command()
 @click.option(
