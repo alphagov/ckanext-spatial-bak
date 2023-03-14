@@ -2,7 +2,7 @@
 
 import logging
 
-from flask import Blueprint, make_response
+from flask import Blueprint, Response, current_app, make_response
 
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
@@ -60,6 +60,9 @@ def display_html_original(id):
     content = util.transform_to_html(content, xslt_package, xslt_path)
     return make_response((content, 200, headers))
 
+def metrics(self):
+    data, content_type = current_app._metrics.generate_metrics()
+    return Response(data, mimetype=content_type)
 
 harvest_metadata.add_url_rule(
     "/api/2/rest/harvestobject/<id>/xml", view_func=harvest_object_redirect_xml
@@ -75,3 +78,5 @@ harvest_metadata.add_url_rule("/harvest/object/<id>/html", view_func=display_htm
 harvest_metadata.add_url_rule(
     "/harvest/object/<id>/html/original", view_func=display_html_original
 )
+
+harvest_metadata.add_url_rule(u"/metrics", view_func=metrics)
