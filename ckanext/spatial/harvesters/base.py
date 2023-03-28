@@ -851,7 +851,7 @@ class SpatialHarvester(HarvesterBase):
 
         '''
         url = url.replace(' ', '%20')
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, timeout=20)
 
         content = response.content
 
