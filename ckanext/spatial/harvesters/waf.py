@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import six
 from six.moves.urllib.parse import urljoin
 import logging
 import hashlib
@@ -16,6 +15,7 @@ from ckan import model
 from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.interfaces import IHarvester
+from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
@@ -98,7 +98,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
-            for url, modified_date in _extract_waf(six.text_type(content),source_url,scraper):
+            for url, modified_date in _extract_waf(unicode_safe(content),source_url,scraper):
                 url_to_modified_harvest[url] = modified_date
         except Exception as e:
             msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
@@ -316,16 +316,16 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 response = requests.get(new_url)
                 content = response.content
             except Exception as e:
-                print(six.text_type(e))
+                print(unicode_safe(e))
                 continue
-            _extract_waf(six.text_type(content), new_url, scraper, results, new_depth)
+            _extract_waf(unicode_safe(content), new_url, scraper, results, new_depth)
             continue
         if not url.endswith('.xml'):
             continue
         date = record.date
         if date:
             try:
-                date = six.text_type(dateutil.parser.parse(date))
+                date = unicode_safe(dateutil.parser.parse(date))
             except Exception as e:
                 raise
                 date = None

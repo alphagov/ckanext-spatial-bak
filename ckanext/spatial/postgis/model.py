@@ -1,7 +1,6 @@
 import logging
 from string import Template
 
-import six
 from sqlalchemy import Table, Column, types, func
 
 from geoalchemy2.elements import WKTElement
@@ -14,6 +13,7 @@ from ckan import model
 from ckan.model import meta, Session, Package
 from ckan.model.domain_object import DomainObject
 
+from ckanext.harvest.logic.schema import unicode_safe
 
 log = logging.getLogger(__name__)
 
@@ -228,7 +228,7 @@ def bbox_query_ordered(bbox, srid=None):
     input_geometry = _bbox_2_wkt(bbox, srid)
 
     params = {
-        "query_bbox": six.text_type(input_geometry),
+        "query_bbox": unicode_safe(input_geometry),
         "query_srid": input_geometry.srid,
     }
 

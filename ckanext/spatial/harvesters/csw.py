@@ -1,5 +1,4 @@
 import re
-import six
 from six.moves.urllib.parse import urlparse, urlunparse, urlencode
 
 import logging
@@ -9,6 +8,7 @@ from ckan import model
 from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.interfaces import IHarvester
+from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
@@ -105,7 +105,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % unicode_safe(e), harvest_job)
             return None
 
         new = guids_in_harvest - guids_in_db

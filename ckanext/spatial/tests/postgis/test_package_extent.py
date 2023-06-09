@@ -19,6 +19,7 @@ from ckan.lib.munge import munge_title_to_name
 
 import ckan.tests.factories as factories
 
+from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.spatial.tests.base import SpatialTestBase
 
 use_postgis = tk.asbool(tk.config.get("ckan.spatial.use_postgis", False))
@@ -190,8 +191,8 @@ class SpatialQueryTestBase(SpatialTestBase):
             bbox = self.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)
             create_package(
-                name=munge_title_to_name(six.text_type(fixture_x)),
-                title=six.text_type(fixture_x),
+                name=munge_title_to_name(unicode_safe(fixture_x)),
+                title=unicode_safe(fixture_x),
                 extras=[{"key": "spatial", "value": bbox_geojson}],
             )
 

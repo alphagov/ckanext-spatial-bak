@@ -14,6 +14,7 @@ from pprint import pprint
 
 from ckan import model
 from ckan.model.package_extra import PackageExtra
+from ckanext.harvest.logic.schema import unicode_safe
 
 try:
     from ckanext.spatial.lib.reports import validation_report
@@ -32,7 +33,7 @@ log = logging.getLogger(__name__)
 def report(pkg=None):
 
     if pkg:
-        package_ref = six.text_type(pkg)
+        package_ref = unicode_safe(pkg)
         pkg = model.Package.get(package_ref)
         if not pkg:
             print('Package ref "%s" not recognised' % package_ref)
@@ -96,7 +97,7 @@ def report_csv(csv_filepath):
 
 def initdb(srid=None):
     if srid:
-        srid = six.text_type(srid)
+        srid = unicode_safe(srid)
 
     from ckanext.spatial.postgis.model import setup as db_setup
 
@@ -125,10 +126,10 @@ def update_extents():
             count += 1
         except ValueError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, six.text_type(e)))
+                          (package.id, unicode_safe(e)))
         except TypeError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, six.text_type(e)))
+                          (package.id, unicode_safe(e)))
 
         save_package_extent(package.id, geometry)
 
@@ -203,7 +204,7 @@ def transform_to_html(content, xslt_package=None, xslt_path=None):
         style_xml = etree.parse(style)
         transformer = etree.XSLT(style_xml)
 
-    xml = etree.parse(six.StringIO(content and six.text_type(content)))
+    xml = etree.parse(six.StringIO(content and unicode_safe(content)))
     html = transformer(xml)
 
     result = etree.tostring(html, pretty_print=True)

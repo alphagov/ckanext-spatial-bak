@@ -2,7 +2,6 @@ import os
 import mimetypes
 from logging import getLogger
 
-import six
 import geojson
 
 import shapely.geometry
@@ -18,6 +17,8 @@ from ckan import plugins as p
 from ckan.lib.search import SearchError
 
 from ckan.lib.helpers import json
+
+from ckanext.harvest.logic.schema import unicode_safe
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
@@ -139,10 +140,10 @@ class SpatialMetadata(p.SingletonPlugin):
         try:
             log.debug("Received geometry: {}".format(geometry))
 
-            geometry = geojson.loads(six.text_type(geometry))
+            geometry = geojson.loads(unicode_safe(geometry))
         except ValueError as e:
             error_dict = {
-                "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
+                "spatial": ["Error decoding JSON object: {}".format(unicode_safe(e))]}
             raise tk.ValidationError(error_dict)
 
         if not hasattr(geometry, "is_valid") or not geometry.is_valid:
@@ -159,7 +160,7 @@ class SpatialMetadata(p.SingletonPlugin):
             except Exception as e:
                 if bool(os.getenv('DEBUG')):
                     raise
-                error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
+                error_dict = {"spatial": ["Error: {}".format(unicode_safe(e))]}
                 raise tk.ValidationError(error_dict)
 
     # ITemplateHelpers
