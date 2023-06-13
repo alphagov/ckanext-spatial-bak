@@ -66,6 +66,8 @@ jobs:
         apk add --no-cache \
           geos \
           geos-dev \
+          musl-dev \
+          proj \
           proj-util \
           proj-dev \
           libxml2 \
