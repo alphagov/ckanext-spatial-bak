@@ -2,6 +2,8 @@
 import click
 import logging
 
+from prometheus_flask_exporter import PrometheusMetrics
+
 from bin import ckan_pycsw
 import ckanext.spatial.util as util
 
