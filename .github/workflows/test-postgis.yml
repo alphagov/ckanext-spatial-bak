@@ -18,10 +18,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - ckan-version: 2.9
-            harvester-version: 'master'
-          - ckan-version: 2.9-py2
-            harvester-version: 'v1.4.2'
+          - ckan-version: "2.9"
+            solr-image: "2.9-solr8-spatial"
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
@@ -30,7 +28,7 @@ jobs:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
     services:
       solr:
-        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+        image: ckan/ckan-solr:${{ matrix.solr-image }}
       postgres:
         image: postgis/postgis:10-3.1
         env:
@@ -77,28 +75,7 @@ jobs:
           gcc \
           libxml2-dev \
           libxslt-dev
-
-    - name: Patch to test pyproj
-      if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
-      run: |
-        pip install cython==0.29.36
-        pip install --no-use-pep517 pyproj==2.2.2
-
-    - name: Patch to test pyproj
-      if: ${{ matrix.ckan-version == '2.9' }}
-      run: |
-        pip install cython==0.29.36
-        pip install --no-use-pep517 pyproj==2.6.1
-
-    - name: Install dependencies (python2)
-      if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
-      run: |
-        apk add --no-cache \
-          python2-dev
-        pip install -r requirements-py2.txt
-        pip install -r requirements-postgis-py2.txt
     - name: Install dependencies (python3)
-      if: ${{ matrix.ckan-version != '2.9-py2' && matrix.ckan-version != '2.8' && matrix.ckan-version != '2.7' }}
       run: |
         apk add --no-cache \
           python3-dev
