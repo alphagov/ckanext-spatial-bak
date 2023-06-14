@@ -67,7 +67,6 @@ jobs:
           proj \
           proj-util \
           proj-dev \
-          py3-setuptools \
           libxml2 \
           libxslt \
           gcc \
