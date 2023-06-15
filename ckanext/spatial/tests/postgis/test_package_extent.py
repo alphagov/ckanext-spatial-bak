@@ -246,10 +246,10 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
         package_titles = [model.Package.get(id_).title for id_ in package_ids]
         # check the right items are returned
         assert set(package_titles) == set(
-            ("[0, 9]", "[1, 8]", "[2, 7]", "[3, 6]", "[4, 5]")
+            ("(0, 9)", "(1, 8)", "(2, 7)", "(3, 6)", "(4, 5)")
         )
         # check the order is good
-        assert package_titles == ["[2, 7]", "[1, 8]", "[3, 6]", "[0, 9]", "[4, 5]"]
+        assert package_titles == ["(2, 7)", "(1, 8)", "(3, 6)", "(0, 9)", "(4, 5)"]
 
 
 @pytest.mark.usefixtures(
