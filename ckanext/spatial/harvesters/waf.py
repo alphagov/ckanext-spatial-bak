@@ -15,12 +15,12 @@ from ckan import model
 from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
+from ckanext.spatial.util import unicode_safe
 
 log = logging.getLogger(__name__)
 

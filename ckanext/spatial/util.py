@@ -14,7 +14,7 @@ from pprint import pprint
 
 from ckan import model
 from ckan.model.package_extra import PackageExtra
-from ckanext.harvest.logic.schema import unicode_safe
+from ckan.lib.navl.validators import unicode_safe as ckan_unicode_safe
 
 try:
     from ckanext.spatial.lib.reports import validation_report
@@ -28,6 +28,12 @@ from ckantoolkit import config
 
 
 log = logging.getLogger(__name__)
+
+
+def unicode_safe(value):
+    if isinstance(value, tuple):
+        return str(value)
+    return ckan_unicode_safe(value)
 
 
 def report(pkg=None):

@@ -28,12 +28,12 @@ from ckan.lib.search.index import PackageSearchIndex
 from ckanext.harvest.harvesters.base import munge_tag
 
 from ckanext.harvest.harvesters.base import HarvesterBase
-from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.harvested_metadata import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
+from ckanext.spatial.util import unicode_safe
 from ckantoolkit import config
 
 log = logging.getLogger(__name__)

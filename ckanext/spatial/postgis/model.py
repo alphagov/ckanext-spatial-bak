@@ -13,7 +13,8 @@ from ckan import model
 from ckan.model import meta, Session, Package
 from ckan.model.domain_object import DomainObject
 
-from ckanext.harvest.logic.schema import unicode_safe
+from ckanext.spatial.util import unicode_safe
+
 
 log = logging.getLogger(__name__)
 

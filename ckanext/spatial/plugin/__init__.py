@@ -18,7 +18,8 @@ from ckan.lib.search import SearchError
 
 from ckan.lib.helpers import json
 
-from ckanext.harvest.logic.schema import unicode_safe
+from ckanext.spatial.util import unicode_safe
+
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (

@@ -31,13 +31,13 @@ from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.harvested_metadata import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
+from ckanext.spatial.util import unicode_safe
 
 
 log = logging.getLogger(__name__)

@@ -8,12 +8,12 @@ from ckan import model
 from ckan.plugins.core import SingletonPlugin, implements
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
+from ckanext.spatial.util import unicode_safe
 
 
 class CSWHarvester(SpatialHarvester, SingletonPlugin):

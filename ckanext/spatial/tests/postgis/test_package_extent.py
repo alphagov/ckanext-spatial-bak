@@ -19,8 +19,8 @@ from ckan.lib.munge import munge_title_to_name
 
 import ckan.tests.factories as factories
 
-from ckanext.harvest.logic.schema import unicode_safe
 from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.util import unicode_safe
 
 use_postgis = tk.asbool(tk.config.get("ckan.spatial.use_postgis", False))
 
@@ -191,7 +191,7 @@ class SpatialQueryTestBase(SpatialTestBase):
             bbox = self.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)
             create_package(
-                name=munge_title_to_name(unicode_safe(fixture_x)),
+                name=munge_title_to_name(unicode_safe(str(fixture_x))),
                 title=unicode_safe(fixture_x),
                 extras=[{"key": "spatial", "value": bbox_geojson}],
             )
@@ -246,10 +246,10 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
         package_titles = [model.Package.get(id_).title for id_ in package_ids]
         # check the right items are returned
         assert set(package_titles) == set(
-            ("(0, 9)", "(1, 8)", "(2, 7)", "(3, 6)", "(4, 5)")
+            ("[0, 9]", "[1, 8]", "[2, 7]", "[3, 6]", "[4, 5]")
         )
         # check the order is good
-        assert package_titles == ["(2, 7)", "(1, 8)", "(3, 6)", "(0, 9)", "(4, 5)"]
+        assert package_titles == ["[2, 7]", "[1, 8]", "[3, 6]", "[0, 9]", "[4, 5]"]
 
 
 @pytest.mark.usefixtures(
