@@ -21,7 +21,7 @@ jobs:
           - ckan-version: 2.9
             solr-image: "ckan-solr-dev:2.9"
           - ckan-version: "2.10"
-            solr-image: "ckan/ckan-solr:2.10-spatial"
+            solr-image: "ckan-solr:2.10-spatial"
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
