@@ -26,9 +26,6 @@ jobs:
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
             requirements-file: 'requirements.txt'
-          - ckan-version: 2.9-py2
-            solr-image: 2.9-py2-solr8-spatial
-            requirements-file: 'requirements-py2.txt'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
