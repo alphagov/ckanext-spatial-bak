@@ -54,7 +54,7 @@ class SpatialMetadata(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
-    use_postgis = False
+    use_postgis = True
 
     # IConfigurable
 
