@@ -23,6 +23,7 @@ jobs:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
             requirements-file: 'requirements.txt'
+            harvester-version: 'master'
           # - ckan-version: 2.9
           #   solr-image: 2.9-solr8-spatial
           #   requirements-file: 'requirements.txt'
