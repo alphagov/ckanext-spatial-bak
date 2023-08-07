@@ -20,8 +20,10 @@ jobs:
         include:
           - ckan-version: 2.9
             solr-image: "ckan-solr-dev:2.9"
+            harvester-version: 'master'
           - ckan-version: "2.10"
             solr-image: "ckan-solr:2.10-spatial"
+            harvester-version: 'master'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
