@@ -78,7 +78,7 @@ class GeminiHarvester(SpatialHarvester):
             if not str(e).strip():
                 self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
             else:
-                self._save_object_error('Error importing Gemini document: %s' % six.text_type(e), harvest_object, 'Import')
+                self._save_object_error('Error importing Gemini document: %s' % unicode_safe(e), harvest_object, 'Import')
             return False
 
     def import_gemini_object(self, harvest_object):

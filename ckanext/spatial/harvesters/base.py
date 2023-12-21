@@ -738,7 +738,7 @@ class SpatialHarvester(HarvesterBase):
             s = wms.WebMapService(url)
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception as e:
-            message = 'WMS check for %s failed with exception: %s' % (url, six.text_type(e))
+            message = 'WMS check for %s failed with exception: %s' % (url, unicode_safe(e))
             if harvest_object:
                 self._save_object_error(message, harvest_object, 'Import')
             else:
