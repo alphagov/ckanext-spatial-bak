@@ -12,4 +12,5 @@ OWSLib==0.28.1
 geojson==3.0.1
 
 pycsw==2.6.1
+cryptography
 pyOpenSSL
