@@ -13,4 +13,4 @@ geojson==3.0.1
 
 pycsw==2.6.1
 cryptography
-pyOpenSSL
+pyopenssl==22.1.0
