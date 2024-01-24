@@ -1,9 +1,10 @@
-ckantoolkit
+ckantoolkit==0.0.7
 lxml>=2.3
-argparse
+# argparse
 pyparsing>=2.1.10
 requests>=1.1.0
 cython==0.29.36; python_version < '3.9'
+cython==3.0.8; python_version >= '3.9'
 pyproj==2.6.1; python_version < '3.9'
 pyproj==3.6.1; python_version >= '3.9'
 
@@ -12,5 +13,5 @@ OWSLib==0.28.1
 geojson==3.0.1
 
 pycsw==2.6.1
-cryptography
+cryptography==38.0.4
 pyopenssl==22.1.0
