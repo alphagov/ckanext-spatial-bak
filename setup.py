@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
-from ckanext.spatial import __version__
 
-version = __version__
+# get version from ckanext.spatial.__init__.py.__version__
+version = "2.1.1"
 
 setup(
     name="ckanext-spatial",
@@ -71,5 +71,5 @@ https://docs.ckan.org/projects/ckanext-spatial/en/latest/
 
     [ckan.test_plugins]
     test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
-""",
+    """,
 )
