@@ -7,7 +7,6 @@ import ckanext.spatial.util as util
 
 def get_commands():
     return [
-        spatial,
         spatial_validation,
         spatial_csw
     ]
@@ -46,20 +45,20 @@ def validate_file(filepath):
     return util.validate_file(filepath)
 
 
-@click.group(short_help=u"Performs spatially related operations.")
-def spatial():
-    pass
+# @click.group(short_help=u"Performs spatially related operations.")
+# def spatial():
+#     pass
 
 
-@spatial.command()
-@click.argument('srid', required=False)
-def initdb(srid):
-    return util.initdb(srid)
+# @spatial.command()
+# @click.argument('srid', required=False)
+# def initdb(srid):
+#     return util.initdb(srid)
 
 
-@spatial.command('extents')
-def update_extents():
-    return util.update_extents()
+# @spatial.command('extents')
+# def update_extents():
+#     return util.update_extents()
 
 
 @click.group(u"ckan-pycsw", short_help=u"Spatial CSW commands")
