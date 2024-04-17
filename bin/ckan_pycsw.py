@@ -75,7 +75,7 @@ def _get_gathered_records(ckan_url):
         )
     )
 
-    query = 'api/search/dataset?fl=id,metadata_modified,extras_harvest_object_id,' \
+    query = 'api/search/dataset?fl=id,metadata_modified,harvest,extras_harvest_object_id,' \
             'extras_metadata_source&q=harvest_object_id:[\\\\"\\\\"%20TO%20*]&start={start}&rows={limit}'
 
     while True:
