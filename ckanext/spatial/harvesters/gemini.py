@@ -352,7 +352,7 @@ class GeminiHarvester(SpatialHarvester):
 
         extras_as_dict = []
         for key,value in extras.items():
-            if isinstance(value, str + (Number,)):
+            if isinstance(value, str):
                 extras_as_dict.append({'key':key,'value':value})
             else:
                 extras_as_dict.append({'key':key,'value':json.dumps(value)})
