@@ -8,10 +8,11 @@ cython==3.0.8; python_version >= '3.9'
 pyproj==2.6.1; python_version < '3.9'
 pyproj==3.6.1; python_version >= '3.9'
 
+pycsw==2.6.1  # as OWSLib is not pinned
+
 Shapely==2.0.1
 OWSLib==0.28.1
 geojson==3.0.1
 
-pycsw==2.6.1
 cryptography==38.0.4
 pyopenssl==22.1.0
