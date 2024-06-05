@@ -289,7 +289,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
         raise
 
     try:
-        record = metadata.parse_record(context, url, repo)[0]
+        record = metadata.parse_record(context, xml, repo)[0]
     except Exception as err:
         log.error('Could not extract metadata from %s, url: %s, Error: %s' % (ckan_id, url, err))
         raise
