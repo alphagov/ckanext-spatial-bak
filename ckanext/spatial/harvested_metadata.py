@@ -38,7 +38,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            xml_str = self.xml_str.decode('utf-8')
+            xml_str = self.xml_str.decode('utf-8') if type(self.xml_str) is bytes else self.xml_str
             self.xml_tree = etree.fromstring(xml_str, parser=parser)
         return self.xml_tree
 

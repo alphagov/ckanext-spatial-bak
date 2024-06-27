@@ -853,7 +853,7 @@ class SpatialHarvester(HarvesterBase):
         url = url.replace(' ', '%20')
         response = requests.get(url, timeout=20)
 
-        content = response.content
+        content = response.content.decode('UTF-8') if type(response.content) is bytes else response.content
 
         # Remove original XML declaration
         content = re.sub('<\?xml(.*)\?>', '', content)
