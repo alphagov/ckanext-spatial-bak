@@ -32,22 +32,25 @@ from ckanext.spatial.validation import Validators
 serve()
 
 
-@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup')
 @pytest.mark.ckan_config('ckan.plugins', 'harvest')
 class HarvestFixtureBase(SpatialTestBase):
 
     def setup(self):
         # Add sysadmin user
-        harvest_user = model.User(name=u'harvest', password=u'test', sysadmin=True)
-        Session.add(harvest_user)
-        Session.commit()
+        harvest_user = Session.query(User).filter(User.name=='harvest').first()
+        if not harvest_user:
+            harvest_user = model.User(name=u'harvest', password=u'test', sysadmin=True)
+            Session.add(harvest_user)
+            Session.commit()
 
         package_schema = default_update_package_schema()
         self.context ={'model':model,
                        'session':Session,
                        'user':u'harvest',
                        'schema':package_schema,
-                       'api_version': '2'}
+                       'api_version': '2',
+                       'ignore_auth': True}
 
     def teardown(self):
        model.repo.rebuild_db()
@@ -55,7 +58,8 @@ class HarvestFixtureBase(SpatialTestBase):
     def _create_job(self,source_id):
         context ={'model':model,
                  'session':Session,
-                 'user':u'harvest'}
+                 'user':u'harvest',
+                 'ignore_auth': True}
 
         job_dict=get_action('harvest_job_create')(context,{'source_id':source_id})
         job = HarvestJob.get(job_dict['id'])
@@ -66,7 +70,8 @@ class HarvestFixtureBase(SpatialTestBase):
     def _create_source_and_job(self, source_fixture):
         context ={'model':model,
                  'session':Session,
-                 'user':u'harvest'}
+                 'user':u'harvest',
+                 'ignore_auth': True}
 
         if config.get('ckan.harvest.auth.profile') == u'publisher' \
            and not 'publisher_id' in source_fixture:
@@ -111,7 +116,7 @@ class HarvestFixtureBase(SpatialTestBase):
         return obj
 
 
-@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup')
 @pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_waf_harvester gemini_doc_harvester')
 class TestHarvest(HarvestFixtureBase):
 
@@ -915,11 +920,10 @@ GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
 GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
 
 
-@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis')
 @pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_doc_harvester')
 class TestGatherMethods(HarvestFixtureBase):
-    def setup(self):
-        HarvestFixtureBase.setup(self)
+    def create_source_and_job(self):
         # Create source
         source_fixture = {
             'title': 'Test Source',
@@ -935,20 +939,25 @@ class TestGatherMethods(HarvestFixtureBase):
         model.repo.rebuild_db()
 
     def test_get_gemini_string_and_guid(self):
+        self.create_source_and_job()
         res = self.harvester.get_gemini_string_and_guid(BASIC_GEMINI, url=None)
         assert_equal(res, (BASIC_GEMINI, GUID))
 
     def test_get_gemini_string_and_guid__no_guid(self):
+        self.create_source_and_job()
         res = self.harvester.get_gemini_string_and_guid(GEMINI_MISSING_GUID, url=None)
         assert_equal(res, (GEMINI_MISSING_GUID, ''))
 
     def test_get_gemini_string_and_guid__non_parsing(self):
+        self.create_source_and_job()
         content = '<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">' # no closing tag
         assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
 
     def test_get_gemini_string_and_guid__empty(self):
+        self.create_source_and_job()
         content = ''
         assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
+
 
 class TestImportStageTools:
     def test_licence_url_normal(self):
@@ -1039,7 +1048,7 @@ class TestImportStageTools:
         assert arr == []
 
 
-@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis')
 @pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_doc_harvester')
 class TestValidation(HarvestFixtureBase):
 

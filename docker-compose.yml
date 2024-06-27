@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+  ckan-2.10:
+    container_name: ckan-2.10
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - TEST_CKAN_SQLALCHEMY_URL=postgresql://ckan_default:pass@db/ckan_test
+      - TEST_CKAN_DATASTORE_WRITE_URL=postgresql://ckan_default:pass@db/datastore_test
+      - TEST_CKAN_DATASTORE_READ_URL=postgresql://ckan_default:pass@db/datastore_test
+      - POSTGRES_PASSWORD=pass  
+    links:
+      - db-2.10:db
+      - solr-2.10:solr
+      - redis-2.10:redis
+    ports:
+      - "0.0.0.0:3000:3000"
+    volumes:
+      - ckan_storage-2.10:/var/lib/ckan
+      - ./logs/2.10:/var/log/ckan
+    depends_on: 
+      - db-2.10
+      - solr-2.10
+      - redis-2.10
+    command: bash -c "tail -f /dev/null"
+    networks:
+      - ckan-2.10
+
+  db-2.10:
+    container_name: db-2.10
+    image: ckan/ckan-postgres-dev:2.10
+    environment:
+      - POSTGRES_PASSWORD=pass
+    networks:
+      - ckan-2.10
+
+  solr-2.10:
+    container_name: solr-2.10
+    image: ghcr.io/alphagov/solr:2.10
+    ports:
+      - "8983:8983"
+    volumes:
+      - solr_data-2.10:/opt/solr/server/solr/ckan/data
+    networks:
+      - ckan-2.10
+  
+  redis-2.10:
+    container_name: redis-2.10
+    image: redis:3
+    networks:
+      - ckan-2.10
+    volumes:
+      - redis_data-2.10:/data
+
+volumes:
+  ckan_storage-2.10:
+  solr_data-2.10:
+  redis_data-2.10:
+
+networks:
+  ckan-2.10:
+      driver: bridge

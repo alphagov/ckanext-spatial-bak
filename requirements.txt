@@ -10,9 +10,11 @@ pyproj==3.6.1; python_version >= '3.9'
 
 pycsw==2.6.1  # as OWSLib is not pinned
 
-Shapely==2.0.1
+Shapely==2.0.4
 OWSLib==0.28.1
 geojson==3.0.1
 
 cryptography==38.0.4
 pyopenssl==22.1.0
+
+GeoAlchemy2==0.15.01
