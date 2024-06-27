@@ -730,13 +730,17 @@ class SpatialHarvester(HarvesterBase):
         return True
     ##
 
-    def _is_wms(self, url, harvest_object=None):
+    def _is_wms(self, url, harvest_object=None, version="1.1.1"):
         '''
         Checks if the provided URL actually points to a Web Map Service.
         '''
         try:
-            s = wms.WebMapService(url)
+            s = wms.WebMapService(url, version=version)
             return isinstance(s.contents, dict) and s.contents != {}
+        except AttributeError as e:
+            # try WMS 1.3.0 on attribute errors
+            if version == "1.1.1":
+                return self._is_wms(url, harvest_object=harvest_object, version="1.3.0")
         except Exception as e:
             message = 'WMS check for %s failed with exception: %s' % (url, unicode_safe(e))
             if harvest_object:
