@@ -14,6 +14,12 @@ from pycsw.core import metadata, repository, util
 import pycsw.core.config
 import pycsw.core.admin
 
+from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
+
+
+registry = CollectorRegistry()
+g = Gauge('job_last_success_unixtime', 'Last time a batch job successfully finished', registry=registry)
+
 logging.basicConfig(format="%(message)s", level=logging.INFO)
 
 log = logging.getLogger(__name__)
@@ -248,6 +254,9 @@ def load(pycsw_config, ckan_url):
 
     change_count, error_count = _update_records(
         changed, gathered_records, ckan_url, repo, context, error_count)
+
+    g.set_to_current_time()
+    push_to_gateway('http://prometheus-pushgateway.monitoring.svc.cluster.local:9091', job='datagovuk/pycsw-load', registry=registry)
 
     log.info("Loading completed: {gather_count} gathered, {new_count} added, "
              "{change_count} changed, {delete_count} deleted, {error_count} errored".format(
