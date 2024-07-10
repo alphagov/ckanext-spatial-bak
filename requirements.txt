@@ -19,3 +19,5 @@ pyopenssl==22.1.0
 
 GeoAlchemy2==0.15.01
 sqlalchemy==1.4.52
+
+prometheus-client==0.20
