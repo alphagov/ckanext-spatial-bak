@@ -251,7 +251,7 @@ def load(pycsw_config, ckan_url):
         changed, gathered_records, ckan_url, repo, context, error_count)
 
     g.set_to_current_time()
-    push_to_gateway('http://prometheus-pushgateway.monitoring.svc.cluster.local:9091', job='datagovuk/pycsw-load', registry=registry)
+    push_to_gateway('http://prometheus-pushgateway.monitoring.svc.cluster.local:9091', job='datagovuk/pycsw_load', registry=registry)
 
     log.info("Loading completed: {gather_count} gathered, {new_count} added, "
              "{change_count} changed, {delete_count} deleted, {error_count} errored".format(
