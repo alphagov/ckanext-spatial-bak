@@ -222,11 +222,6 @@ def _update_records(changed, gathered_records, ckan_url, repo, context, error_co
 
 
 def load(pycsw_config, ckan_url):
-
-    if sys.version_info < (3, 0):
-        log.info("Python 2 detected: Please upgrade to CKAN 2.9 and python 3")
-        return
-
     database = pycsw_config.get('repository', 'database')
     table_name = pycsw_config.get('repository', 'table')
 
@@ -266,11 +261,6 @@ def load(pycsw_config, ckan_url):
 
 
 def clear(pycsw_config):
-
-    if sys.version_info < (3, 0):
-        log.info("Python 2 detected:  Please upgrade to CKAN 2.9 and python 3")
-        return
-
     from sqlalchemy import create_engine, MetaData, Table
 
     database = pycsw_config.get("repository", "database")
