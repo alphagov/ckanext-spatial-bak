@@ -820,7 +820,7 @@ class TestHarvest(HarvestFixtureBase):
             'source_type': u'gemini-single',
             'owner_org': 'test-org',
             'metadata_created': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
-            'metadata_modified': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+            'metadata_modified': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s.%f'),
 
         }
 
