@@ -124,7 +124,7 @@ class GeminiHarvester(SpatialHarvester):
 
         # Save the metadata reference date in the Harvest Object
         try:
-            metadata_modified_date = datetime.fromisoformat(gemini_values['metadata-date'])
+            metadata_modified_date = datetime.fromisoformat(gemini_values['metadata-date'].upper().rstrip('Z'))
         except ValueError:
             raise Exception('Could not extract reference date for GUID %s (%s)' \
                     % (gemini_guid,gemini_values['metadata-date']))
