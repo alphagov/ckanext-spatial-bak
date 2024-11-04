@@ -157,7 +157,6 @@ class TestHarvest(HarvestFixtureBase):
         objects = []
         for object_id in object_ids:
             obj = HarvestObject.get(object_id)
-            # obj = Session.query(HarvestObject).filter(HarvestObject.id==object_id).one()
             assert obj
             objects.append(obj)
             harvester.import_stage(obj)
@@ -412,6 +411,46 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 1
         assert job.gather_errors[0].harvest_job_id == job.id
         assert 'Error parsing the document' in job.gather_errors[0].message
+
+    def test_harvest_missing_resource_type_no_duplicates(self):
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1/missing-resource-type.xml',
+            'source_type': u'gemini-single'
+        }
+
+        _, job = self._create_source_and_job(source_fixture)
+
+        harvester = GeminiDocHarvester()
+
+        object_ids = harvester.gather_stage(job)
+        obj = HarvestObject.get(object_ids[0])
+        assert obj
+        harvester.import_stage(obj)
+
+        obj.current = False
+        obj.save()
+
+        # Check obj errors
+        assert len(obj.errors) == 1
+        assert len(Session.query(HarvestObject).filter(HarvestObject.guid==obj.guid).all()) == 1
+
+        # Check that number of datasets created is just 1
+        assert len(Session.query(Package).filter(Package.type=='dataset').all()) == 1
+
+        object_ids = harvester.gather_stage(job)
+        obj = HarvestObject.get(object_ids[0])
+        assert obj
+        harvester.import_stage(obj)
+
+        assert len(obj.errors) == 2
+        assert len(Session.query(HarvestObject).filter(HarvestObject.guid==obj.guid).all()) == 2
+
+        # Check number of datasets still 1
+        assert len(Session.query(Package).filter(Package.type=='dataset').all()) == 1
+
 
     def test_harvest_error_404(self):
         # Create source
