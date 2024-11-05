@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   ckan-2.10:
     container_name: ckan-2.10
@@ -24,7 +22,7 @@ services:
       - db-2.10
       - solr-2.10
       - redis-2.10
-    command: bash -c "tail -f /dev/null"
+    command: bash -c "ckan -c test.ini db init && tail -f /dev/null"
     networks:
       - ckan-2.10
 
