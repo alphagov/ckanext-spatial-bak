@@ -141,6 +141,16 @@ class GeminiHarvester(SpatialHarvester):
             last_harvested_object = last_harvested_object[0]
         elif len(last_harvested_object) > 1:
             raise Exception('Application Error: more than one current record for GUID %s' % gemini_guid)
+        else:
+            log.warning('No current harvest object with GEMINI guid %s found, ' \
+                        'try to find if there is a harvest object with matching metadata modified date' % gemini_guid)
+            invalid_harvested_object = Session.query(HarvestObject) \
+                                .filter(HarvestObject.id!=self.obj.id) \
+                                .filter(HarvestObject.guid==gemini_guid) \
+                                .filter(HarvestObject.metadata_modified_date==metadata_modified_date) \
+                                .first()
+            if invalid_harvested_object:
+                raise Exception('Invalid harvest object with GEMINI guid %s found' % gemini_guid)
 
         if last_harvested_object and last_harvested_object.harvest_source_id == harvest_object.harvest_source_id:
             def get_harvest_object_url(harvest_object_id):
