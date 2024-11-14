@@ -54,6 +54,10 @@ class SolrBBoxSearchBackend(SpatialSearchBackend):
             return dataset_dict
 
         geometry = self.parse_geojson(geom_from_metadata)
+
+        if not geometry:
+            return dataset_dict
+
         shape = self.shape_from_geometry(geometry)
 
         if not shape:
