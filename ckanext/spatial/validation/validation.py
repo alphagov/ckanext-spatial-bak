@@ -409,6 +409,6 @@ if __name__ == '__main__':
 class SchDocumentResolver(etree.Resolver):
     def resolve(self, url, id, context):
         log.debug("Resolving URL '%s'" % url)
-        response = requests.get(url)
+        response = requests.get(url, headers={"User-Agent": "data.gov.uk"})
         res = self.resolve_string(response.text, context)
         return res
