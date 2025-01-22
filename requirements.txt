@@ -14,8 +14,8 @@ Shapely==2.0.4
 OWSLib==0.28.1
 geojson==3.0.1
 
-cryptography==38.0.4
-pyopenssl==22.1.0
+cryptography==42.0.4
+pyopenssl==25.0.0
 
 GeoAlchemy2==0.15.01
 sqlalchemy==1.4.52
